@@ -1,0 +1,39 @@
+[project]
+name = "torch-nibs"
+version = "0.0.2"
+requires-python = ">=3.9"
+# pip
+dependencies = [
+    "torcheval>=0.0.7,<0.0.8"
+]
+authors = [
+  { name="manyhue"},
+]
+description = "A small framework for training and evaluating models in notebooks with pytorch"
+readme = "README.md"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+
+[build-system] 
+build-backend = "hatchling.build"
+requires = ["hatchling"]
+
+[tool.hatch.build]
+packages = ["tnibs"] 
+
+[tool.hatch.publish.repositories]
+name = "testpypi"
+url = "https://test.pypi.org/legacy/"
+[tool.ruff.lint]
+ignore = ["F403", "F405", "F401", "E741"]
+
+[tool.pytest]
+addopts          = ['--doctest-modules', '--doctest-report', 'ndiff']
+doctest_optionflags= ['NORMALIZE_WHITESPACE', 'ELLIPSIS']
+
+[dependency-groups]
+dev = ["super-easypypi>=0.0.10,<0.0.11"]
