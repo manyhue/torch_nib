@@ -17,7 +17,7 @@ if is_notebook():
     from IPython.display import display, clear_output
 
 from tnibs.data import *
-from tnibs.data.utils.dfs import *
+from tnibs.data.utils import dfs
 from tnibs.modules.modules import *
 from tnibs.metric import *
 from tnibs.train import *
