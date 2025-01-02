@@ -1,6 +1,6 @@
 
 from typing import override
-from tnibs.data import Data
+from .data import Data
 
 
 class LoaderData(Data):

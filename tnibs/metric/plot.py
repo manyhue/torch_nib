@@ -1,13 +1,16 @@
-from typing import Dict
+from typing import Dict, Iterable, TYPE_CHECKING
 import IPython.display
 import pandas as pd
 import polars as pl
 import seaborn as sns
 import matplotlib.pyplot as plt
 import numpy as np
+from tnibs.utils import Base, is_notebook, vb
 
-from tnibs.metric.metric import MetricsFrame
-from tnibs.utils.utils import Base, is_notebook, vb
+
+if TYPE_CHECKING:
+    from tnibs.metric.metric import MetricsFrame
+
 
 # todo: set title and y_label
 class ProgressBoard(Base):
@@ -36,6 +39,8 @@ class ProgressBoard(Base):
         sns.set_style("whitegrid")
 
         self.init_plot()
+        self.mfs = []
+        self._count = 0
 
         # See draw points
         ## Initialize data structures
@@ -51,10 +56,7 @@ class ProgressBoard(Base):
         #         [(xlabel, pl.Float64), (ylabel, pl.Float64), ("Label", pl.String())]
         #     )
 
-        # self._count = 0
         # self._points_count = 0
-
-        # self.mfs = []
 
         # self.data = pl.DataFrame(
         #     schema=self.schema, data=[]
@@ -167,7 +169,7 @@ class ProgressBoard(Base):
         self._redef_ax()
         self.iupdate()
 
-    def add_mf(self, *mfs: MetricsFrame):
+    def add_mf(self, *mfs: Iterable["MetricsFrame"]):
         for mf in mfs:
             self.mfs.append(mf)
             if mf.board is None:

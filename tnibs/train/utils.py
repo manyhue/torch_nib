@@ -3,8 +3,8 @@
 
 from typing import List
 from tnibs.metric.plot import ProgressBoard
-from tnibs.utils import torch
 from tnibs.utils.utils import is_notebook
+import torch
 
 if is_notebook():
     from tqdm.notebook import tqdm as tqbar

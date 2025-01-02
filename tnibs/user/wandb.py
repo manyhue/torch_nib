@@ -1,3 +1,4 @@
+from tnibs.user.utils import get_project_name
 import tnibs.user.wandb as wandb
 
 from tnibs.data import DataloaderConfig

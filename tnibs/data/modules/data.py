@@ -1,22 +1,20 @@
 from dataclasses import field
 import os
 import torch
-from tnibs.dataframes import dfs
+from tnibs.data.utils import dfs
 from tnibs.config import Config
-from tnibs.datasets.datasets import SubDataset
+from tnibs.data.datasets import SubDataset
 from tnibs.utils._utils import *
 import numpy as np
 import torch.utils.data as td
-from tnibs.dataframes.dfs import *
 from typing import Any, Dict, List, Optional, Tuple, Union
 
 
 from tnibs.utils.array import row_index, to_tensors
-from tnibs.utils.torch import describe_tensor
+from tnibs.utils.torch_utils import describe_tensor
 from tnibs.utils import Base
 
-@Config
-class DataConfig:
+class DataConfig(Config):
     data: Optional[Any] = None
     dataset: Optional[Any] = None
     batch_size: int = 32
@@ -28,8 +26,7 @@ class DataConfig:
 
 
 # used in wandb
-@Config
-class DataloaderConfig:
+class DataloaderConfig(Config):
     batch_size: int = None
     num_workers: int = None
     sampler: Optional[Any] = None

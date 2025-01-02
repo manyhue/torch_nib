@@ -1,11 +1,5 @@
-from typing import Dict, List
 import torch.utils.data as td
-import torch
-import torchvision
-from tnibs.utils._utils import Base
-from datasets import IterableDataset
-import math
-from itertools import chain
+from tnibs.utils import Base
 
 
 class SeqDataset(td.Dataset, Base):

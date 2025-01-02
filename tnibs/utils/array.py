@@ -1,5 +1,4 @@
-from ast import List
-from typing import Iterable
+from typing import Iterable, List
 import numpy as np
 import pandas as pd
 import polars as pl
@@ -13,21 +12,21 @@ def to_nplist(x, dim=1, copy=True):
 
 
 def to_list(x, force=False, level=1):
-    def k_level(obj):
-      # this is dumb but can't come up with a better name to put it
-      test = obj
-      while level > 0 and isinstance(test, list):
-          if len(test) == 0:
-              k -= 1
-              break
-          test = test[0]
-          k -= 1
-      for _ in range(k):
-          obj = [obj]
-      return obj
+    def k_level(obj, level):
+        # this is dumb, we are adding a way to force non "iterable" into a list of a specific depth, but its just a utility.
+        test = obj
+        while level > 0 and isinstance(test, list):
+            if len(test) == 0:
+                level -= 1
+                break
+            test = test[0]
+            level -= 1
+        for _ in range(level):
+            obj = [obj]
+        return obj
     
     if force:
-        return k_level(x)
+        return k_level(x, level)
 
     # ignore the level parameter
     if isinstance(x, pl.Series):
@@ -41,7 +40,7 @@ def to_list(x, force=False, level=1):
     elif isinstance(x, Iterable) and not isinstance(x, str):
         return list(x)
     else:
-        return k_level(x)
+        return k_level(x, level)
 
 
 def to_tensors(arr, **kwargs):
@@ -72,7 +71,7 @@ def row_index(arr, indices):
     elif isinstance(arr, pl.DataFrame):
         try:
             return arr.to_torch(dtype=pl.Float32)[indices]
-        except:  # mixed requires setting correct pl types i.e. int64, float32
+        except pl.exceptions.PolarsError:  # mixed requires setting correct pl types i.e. int64, float32, todo: actual error
             return arr.to_torch()[indices]
     elif isinstance(arr, torch.Tensor):
         return arr[indices]
@@ -97,7 +96,7 @@ def to_permutation(lst: List[int]):
     return result
 
 # unused
-def inverse_permute_tensor(lst: List[int]):
+def inverse_permute_tensor(lst: List[int], tensor=()):
     """Given a list of indices, computes the inverse permutation and applies it to the tensor.
 
     Args:
@@ -106,6 +105,7 @@ def inverse_permute_tensor(lst: List[int]):
     Returns:
         _type_: Corresponding inverse permutation
     """
+    m = len(tensor)
     lst = [idx if idx >= 0 else m + idx for idx in lst]
 
     inverse_permutation = [None] * m

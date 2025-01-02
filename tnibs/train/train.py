@@ -2,32 +2,20 @@ from dataclasses import field
 import os
 import glob
 from pathlib import Path
-import sys
+from tnibs.utils import *
 from typing import Any, Callable, Optional, Tuple, Union
 import torch
 from tnibs.config import Config
-from tnibs.metric.metric import MetricsFrame
+from tnibs.metric.metric import MetricsFrame, _default_pred
 from tnibs.metric.metrics import CatMetric, from_te
 from tnibs.train.utils import *
 from tnibs.utils.array import to_list
-from tnibs.utils import *
 import torcheval
-from .metrics import _default_pred
-from .utils import *
 import torch.nn as nn
-import logging
-import torch.nn.functional as F
-from . import infer
-import torcheval.metrics as ms
-from .metrics import *
-from .config import *
-from torch.optim.lr_scheduler import OneCycleLR
 import torch.utils.data as td
+from typing import List
 
-
-
-
-@Config
+# ruff: noqa: F405 F403
 class OptimizerConfig(Config):
     lr: float = 0.1
     weight_decay: float = 0.01
@@ -35,13 +23,11 @@ class OptimizerConfig(Config):
     eps: Optional[float] = None
 
 
-@Config
 class TrainerSchedulerOpts(Config):
     steps_per_epoch: float = 0.1
     epochs: float = 0.01
 
 
-@Config
 class TrainerConfig(OptimizerConfig):
     max_epochs: int = 200
     gpus: Optional[List[int]] = field(default_factory=lambda: get_gpus(-1))  # Optional list of GPUs to use
@@ -56,6 +42,7 @@ class TrainerConfig(OptimizerConfig):
         default_factory=list
     )  # provides trainer and loss
     epoch_end_callback: Callable | List[Callable] = field(default_factory=list)
+    true_epoch_end_callback: Callable | List[Callable] = field(default_factory=list)
     save_dir: str | Path = "./out"
     use_dataparallel: bool = False
     scheduler: Optional[
@@ -206,6 +193,7 @@ class Trainer(Base):
         self.train_mfs = to_list(self.train_mfs)
         self.batch_end_callback = to_list(self.batch_end_callback)
         self.epoch_end_callback = to_list(self.epoch_end_callback)
+        self.true_epoch_end_callback = to_list(self.epoch_end_callback)
 
         for mf in self.train_mfs:
             mf.train = True
@@ -355,6 +343,8 @@ class Trainer(Base):
 
         for self.epoch in self.epoch_bar:
             self._fit_epoch(post_epoch=post_epoch)
+            for c in self.true_epoch_end_callback:
+                self.__call_with_optional_self(c)
 
         for b in self.boards:
             b.close()  # Close as many plots as are associated, a bit wonky but works ok

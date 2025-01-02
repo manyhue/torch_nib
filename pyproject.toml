@@ -1,6 +1,6 @@
 [project]
 name = "torch-nibs"
-version = "0.0.3"
+version = "0.0.4"
 requires-python = ">=3.9"
 # pip
 dependencies = [
@@ -28,6 +28,7 @@ packages = ["tnibs"]
 [tool.hatch.publish.repositories]
 name = "testpypi"
 url = "https://test.pypi.org/legacy/"
+
 [tool.ruff.lint]
 ignore = ["F403", "F405", "F401", "E741"]
 
@@ -35,5 +36,7 @@ ignore = ["F403", "F405", "F401", "E741"]
 addopts          = ['--doctest-modules', '--doctest-report', 'ndiff']
 doctest_optionflags= ['NORMALIZE_WHITESPACE', 'ELLIPSIS']
 
-[dependency-groups]
-dev = ["super-easypypi>=0.0.10,<0.0.11"]
+[tool.bumpversion]
+current_version = "0.0.4"
+search = 'version = "{current_version}"'
+replace = 'version = "{new_version}"'

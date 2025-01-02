@@ -1,23 +1,14 @@
-from dataclasses import dataclass, field, asdict
+from dataclasses import dataclass, asdict
 from typing import Dict
 
 
-def Config(cls):
-    """Decorator that makes a class subclass Config and applies @Config.
-    @Config
-    class MyConfig:
-        name: str
-        age: int
-    """
-    cls = dataclass(kw_only=True)(cls)
-    cls.__bases__ = cls.__bases__ + (_Config,) 
-    
-    return cls
-
-
 # use the decorator above
-@dataclass
-class _Config:
+class Config:
+    # autodataclass. Note that static code analyzewrs may complain in which case you may need to write the @dataclass(kw_only=True) as well
+    def __init_subclass__(cls, **kwargs):
+        super().__init_subclass__(**kwargs)
+        dataclass(kw_only=True)(cls)
+
     @classmethod
     def _filter_kwargs(cls, *dicts, **kwargs):
         def arg_to_dict(d):
@@ -80,7 +71,7 @@ class _Config:
         return asdict(self)[k]
 
     def keys(self):
-        return asdict(self).keys()
+        return self._dict().keys()
 
 
     # a hack disguising the fact that we diverge from __dataclass_fields__, but its just for updating dict()

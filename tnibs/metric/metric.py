@@ -1,12 +1,11 @@
 import logging
 import polars as pl
 from tnibs.metric.plot import ProgressBoard
-from tnibs.utils import torch
 from tnibs.utils.array import to_list
-from tnibs.utils.utils import Base
+from tnibs.utils import Base
 
-from .utils._utils import *
-
+from tnibs.utils._utils import *
+import torch
 
 from torcheval.metrics.metric import Metric
 from typing import (

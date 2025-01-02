@@ -22,9 +22,10 @@ from tnibs.modules.modules import *
 from tnibs.metric import *
 from tnibs.train import *
 
-# Device configuration
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-if torch.cuda.is_available():
-    print(f"Using: {device}. Device: {torch.cuda.get_device_name()}")
+if vb(5):
+    # Device configuration
+    if torch.cuda.is_available():
+        print(f"Using: {device}. Device: {torch.cuda.get_device_name()}")
 
 

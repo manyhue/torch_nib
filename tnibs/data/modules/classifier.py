@@ -8,7 +8,7 @@ from tnibs.data.modules.data import Data
 from tnibs.utils._utils import *
 import numpy as np
 import torch.utils.data as td
-from tnibs.dataframes.dfs import *
+from tnibs.data.utils import dfs
 from sklearn.preprocessing import LabelEncoder
 
 import glob

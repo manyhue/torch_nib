@@ -83,7 +83,6 @@ class Module(nn.Module, Base):
 
 
 # Just a reminder of basic field names, don't actually use this. Better to declare all fields when subclassing and subclass Config instead
-@Config
 class ClassifierConfig(Config):
     n_blks: int  # num primary blocks
     n_classes: int

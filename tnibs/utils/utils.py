@@ -2,10 +2,12 @@ import inspect
 from contextlib import contextmanager
 import os
 import torch
+
+
+from typing import Dict, List, TYPE_CHECKING
+
 from tnibs.config import Config
 
-
-from typing import Dict, List
 
 # main utils, useful for user and implementation
 
