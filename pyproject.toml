@@ -1,3 +1,5 @@
+
+
 [project]
 name = "torch-nibs"
 version = "0.0.4"
@@ -36,7 +38,14 @@ ignore = ["F403", "F405", "F401", "E741"]
 addopts          = ['--doctest-modules', '--doctest-report', 'ndiff']
 doctest_optionflags= ['NORMALIZE_WHITESPACE', 'ELLIPSIS']
 
+
 [tool.bumpversion]
 current_version = "0.0.4"
 search = 'version = "{current_version}"'
 replace = 'version = "{new_version}"'
+commit = true
+tag = true
+
+[[tool.bumpversion.files]]
+filename = "pyproject.toml"
+
