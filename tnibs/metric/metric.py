@@ -93,7 +93,7 @@ class MetricsFrame(Base):
         Will use self._count for the idx by default, similar to update(). NOTE that you want
         to be consistent between providing idx or not throughout these two functions.
         Explicitly, using ._count allows us to accumulate statistics across multiple training steps.
-        Passing in the index explicitly allows continuing the index from continued training runs.
+        Passing in the index explicitly allows resuming the index in continued training runs.
         That is, choosing between one or the other depends on if you want to
         reuse the metric frame (single graph) vs reuse the setup (multiple graphs).
 

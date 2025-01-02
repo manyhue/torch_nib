@@ -51,11 +51,11 @@ class Data(Base):
     def __init__(self):
         super().__init__()
 
+        self.processor = None
         # For folds
         self._data_inds = None
         self._folds = None
         self._folder = None
-        self.processor = None
 
         # Subclasses define self.data = (X, y), or dataset/(train_set, val_set) directly
         # Be sure to include set_folds

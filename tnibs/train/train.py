@@ -45,7 +45,7 @@ class TrainerConfig(OptimizerConfig):
     true_epoch_end_callback: Callable | List[Callable] = field(default_factory=list)
     save_dir: str | Path = "./out"
     use_dataparallel: bool = False
-    scheduler: Optional[
+    scheduler_factory: Optional[
         Callable[
             [torch.optim.Optimizer, TrainerSchedulerOpts],
             torch.optim.lr_scheduler.LRScheduler,
@@ -89,11 +89,12 @@ class Trainer(Base):
             **kwargs,
         )
 
-        if self.scheduler:
+        # this is not great
+        if self.scheduler_factory:
             opts = TrainerSchedulerOpts(
                 steps_per_epoch=self.batches_per_epoch, epochs=self.max_epochs
             )
-            self.sched = self.scheduler(self.optim, opts)
+            self.sched = self.scheduler_factory(self.optim, opts)
         else:
             self.sched = None
 
@@ -113,8 +114,8 @@ class Trainer(Base):
     def num_train_batches(self):
         return (
             len(self.train_loader)
-            if isinstance(self.train_loader, td.Dataset)
-            and not isinstance(self.train_loader, td.IterableDataset)
+            if isinstance(self.train_loader.dataset, td.Dataset)
+            and not isinstance(self.train_loader.dataset, td.IterableDataset)
             else None
         )
 
@@ -122,8 +123,8 @@ class Trainer(Base):
     def num_val_batches(self):
         return (
             len(self.val_loader)
-            if isinstance(self.val_loader, td.Dataset)
-            and not isinstance(self.val_loader, td.IterableDataset)
+            if isinstance(self.val_loader.dataset, td.Dataset)
+            and not isinstance(self.val_loader.dataset, td.IterableDataset)
             else None
         )
 
@@ -598,7 +599,7 @@ class Trainer(Base):
 
         loader = loader if loader is not None else self.val_loader
 
-        infer.infer(
+        infer(
             self.model,
             loader,
             batch_fun,
